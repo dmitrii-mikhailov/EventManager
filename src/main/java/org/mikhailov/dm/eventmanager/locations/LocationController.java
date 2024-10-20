@@ -11,29 +11,31 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@RequestMapping("/locations")
 public class LocationController {
 
     private static final Logger log = LoggerFactory.getLogger(LocationController.class);
     private final LocationService locationService;
     private final LocationDtoConverter locationDtoConverter;
 
-    @Autowired
     public LocationController(LocationService locationService, LocationDtoConverter locationDtoConverter) {
         this.locationService = locationService;
         this.locationDtoConverter = locationDtoConverter;
     }
 
 
-    @GetMapping("/locations")
-    public List<LocationDto> getLocations() {
+    @GetMapping
+    public ResponseEntity<List<LocationDto>> getLocations() {
         log.info("GET request for all locations");
-        return locationService.getLocations()
-                .stream()
-                .map(locationDtoConverter::toDto)
-                .toList();
+        return ResponseEntity.
+                status(HttpStatus.OK)
+                        .body(locationService.getAllLocations()
+                                .stream()
+                                .map(locationDtoConverter::toDto)
+                                .toList());
     }
 
-    @PostMapping("/locations")
+    @PostMapping
     public ResponseEntity<LocationDto> createLocation(@RequestBody @Valid LocationDto locationDto) {
         log.info("POST request for location {}", locationDto);
         Location newLocation = locationService.createLocation(
@@ -45,7 +47,7 @@ public class LocationController {
                 .body(locationDtoConverter.toDto(newLocation));
     }
 
-    @DeleteMapping("/locations/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteLocation(@PathVariable Long id) {
         log.info("DELETE request for location id {}", id);
         locationService.deleteLocation(id);
@@ -54,7 +56,7 @@ public class LocationController {
                 .build();
     }
 
-    @GetMapping("/locations/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<LocationDto> getLocation(@PathVariable Long id) {
         log.info("GET request for location id {}", id);
         Location location = locationService.getLocation(id);
@@ -63,7 +65,7 @@ public class LocationController {
                 .body(locationDtoConverter.toDto(location));
     }
 
-    @PutMapping("/locations/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<LocationDto> updateLocation(@PathVariable Long id,
                                @RequestBody @Valid LocationDto locationDto) {
         log.info("PUT request for location id {}", id);

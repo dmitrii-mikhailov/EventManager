@@ -13,22 +13,19 @@ public class LocationService {
     private final LocationRepository locationRepository;
     private final LocationEntityConverter locationEntityConverter;
 
-    @Autowired
     public LocationService(LocationRepository locationRepository,
                            LocationEntityConverter locationEntityConverter) {
         this.locationRepository = locationRepository;
         this.locationEntityConverter = locationEntityConverter;
     }
 
-    public List<Location> getLocations() {
+    public List<Location> getAllLocations() {
         return locationRepository.findAll()
                 .stream()
                 .map(locationEntityConverter::toDomain)
                 .toList();
     }
 
-    @Modifying
-    @Transactional
     public Location createLocation(Location location) {
         LocationEntity locationEntity = new LocationEntity(
                 null,
@@ -44,8 +41,6 @@ public class LocationService {
         return locationEntityConverter.toDomain(savedEntity);
     }
 
-    @Modifying
-    @Transactional
     public void deleteLocation(Long id) {
         if (!locationRepository.existsById(id)) {
             throw new EntityNotFoundException("No location found with id: " + id);
@@ -59,8 +54,6 @@ public class LocationService {
                 .orElseThrow(()-> new EntityNotFoundException("No location found with id: " + id)));
     }
 
-    @Modifying
-    @Transactional
     public Location updateLocation(Long id, Location location) {
         if (!locationRepository.existsById(id)) {
             throw new EntityNotFoundException("No location found with id: " + id);
