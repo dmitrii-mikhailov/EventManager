@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -36,6 +37,7 @@ public class LocationController {
     }
 
     @PostMapping
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<LocationDto> createLocation(@RequestBody @Valid LocationDto locationDto) {
         log.info("POST request for location {}", locationDto);
         Location newLocation = locationService.createLocation(
@@ -48,6 +50,7 @@ public class LocationController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<Void> deleteLocation(@PathVariable Long id) {
         log.info("DELETE request for location id {}", id);
         locationService.deleteLocation(id);
@@ -66,6 +69,7 @@ public class LocationController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<LocationDto> updateLocation(@PathVariable Long id,
                                @RequestBody @Valid LocationDto locationDto) {
         log.info("PUT request for location id {}", id);
