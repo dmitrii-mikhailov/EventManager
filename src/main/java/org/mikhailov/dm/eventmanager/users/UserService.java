@@ -20,15 +20,12 @@ public class UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public User createUser(SignUpRequest signUpRequest) {
-        if (userRepository.existsByLogin(signUpRequest.login())) {
-            throw new EntityExistsException("Username already exists");
-        }
-
-        UserEntity userEntity = new UserEntity(
+    public User createUser(User user) {
+       UserEntity userEntity = new UserEntity(
                 null,
-                signUpRequest.login(),
-                passwordEncoder.encode(signUpRequest.password()),
+                user.login(),
+                passwordEncoder.encode(user.passwordHash()),
+                user.age(),
                 UserRole.USER.name()
         );
 
@@ -46,5 +43,9 @@ public class UserService {
     public User findByLogin(String login) {
         return userEntityConverter.toDomain(userRepository.findByLogin(login)
                 .orElseThrow(()->new EntityNotFoundException("User not found")));
+    }
+
+    public boolean userExists(String login) {
+        return userRepository.existsByLogin(login);
     }
 }

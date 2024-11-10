@@ -10,6 +10,7 @@ public class UserEntityConverter {
                 userEntity.getId(),
                 userEntity.getLogin(),
                 userEntity.getPasswordHash(),
+                userEntity.getAge(),
                 UserRole.valueOf(userEntity.getRole())
         );
     }

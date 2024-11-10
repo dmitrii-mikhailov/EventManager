@@ -12,6 +12,8 @@ public class UserEntity {
     private String login;
     @Column(name = "passwordHash", nullable = false)
     private String passwordHash;
+    @Column(name = "age", nullable = false)
+    private Integer age;
     @Column(name = "role", nullable = false)
     private String role;
 
@@ -19,10 +21,11 @@ public class UserEntity {
     public UserEntity() {
     }
 
-    public UserEntity(Long id, String login, String passwordHash, String role) {
+    public UserEntity(Long id, String login, String passwordHash, Integer age, String role) {
         this.id = id;
         this.login = login;
         this.passwordHash = passwordHash;
+        this.age = age;
         this.role = role;
     }
 
@@ -48,6 +51,14 @@ public class UserEntity {
 
     public void setPasswordHash(String passwordHash) {
         this.passwordHash = passwordHash;
+    }
+
+    public Integer getAge() {
+        return age;
+    }
+
+    public void setAge(Integer age) {
+        this.age = age;
     }
 
     public String getRole() {

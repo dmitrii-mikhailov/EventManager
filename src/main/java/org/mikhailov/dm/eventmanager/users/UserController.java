@@ -18,17 +18,19 @@ public class UserController {
     private final UserService userService;
     private final UserDtoConverter userDtoConverter;
     private final JwtAuthenticationService jwtAuthenticationService;
+    private final CreateUserService createUserService;
 
-    public UserController(UserService userService, UserDtoConverter userDtoConverter, JwtAuthenticationService jwtAuthenticationService) {
+    public UserController(UserService userService, UserDtoConverter userDtoConverter, JwtAuthenticationService jwtAuthenticationService, CreateUserService createUserService) {
         this.userService = userService;
         this.userDtoConverter = userDtoConverter;
         this.jwtAuthenticationService = jwtAuthenticationService;
+        this.createUserService = createUserService;
     }
 
     @PostMapping
     public ResponseEntity<UserDto> createUser(@RequestBody @Valid SignUpRequest signUpRequest) {
         log.info("POST request for create user {}", signUpRequest.login());
-        User newUser = userService.createUser(signUpRequest);
+        User newUser = createUserService.createUser(signUpRequest);
 
         return ResponseEntity
                 .status(HttpStatus.CREATED)

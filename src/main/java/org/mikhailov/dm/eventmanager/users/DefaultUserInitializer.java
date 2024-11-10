@@ -1,8 +1,5 @@
-package org.mikhailov.dm.eventmanager.listeners;
+package org.mikhailov.dm.eventmanager.users;
 
-import org.mikhailov.dm.eventmanager.users.UserEntity;
-import org.mikhailov.dm.eventmanager.users.UserRepository;
-import org.mikhailov.dm.eventmanager.users.UserRole;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.event.ContextStartedEvent;
@@ -11,13 +8,13 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 @Component
-public class Listeners {
+public class DefaultUserInitializer {
 
-    private static final Logger log = LoggerFactory.getLogger(Listeners.class);
+    private static final Logger log = LoggerFactory.getLogger(DefaultUserInitializer.class);
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public Listeners(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public DefaultUserInitializer(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
     }
@@ -30,6 +27,7 @@ public class Listeners {
                     null,
                     "user",
                     passwordEncoder.encode("user"),
+                    18,
                     UserRole.USER.name()
             );
             userRepository.save(userEntity);
@@ -41,6 +39,7 @@ public class Listeners {
                     null,
                     "admin",
                     passwordEncoder.encode("admin"),
+                    18,
                     UserRole.ADMIN.name()
             );
             userRepository.save(userEntity);

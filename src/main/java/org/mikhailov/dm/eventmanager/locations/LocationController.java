@@ -26,6 +26,7 @@ public class LocationController {
 
 
     @GetMapping
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'USER')")
     public ResponseEntity<List<LocationDto>> getLocations() {
         log.info("GET request for all locations");
         return ResponseEntity.
@@ -60,6 +61,7 @@ public class LocationController {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'USER')")
     public ResponseEntity<LocationDto> getLocation(@PathVariable Long id) {
         log.info("GET request for location id {}", id);
         Location location = locationService.getLocation(id);

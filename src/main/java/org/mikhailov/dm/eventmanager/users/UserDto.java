@@ -7,5 +7,9 @@ public record UserDto (
         Long id,
         @Size(max = 1024)
         @NotBlank
-        String login
+        String login,
+        @NotBlank
+        @Min(0)
+        Integer age,
+        UserRole role
 ){}

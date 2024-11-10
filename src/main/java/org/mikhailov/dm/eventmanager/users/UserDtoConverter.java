@@ -8,7 +8,9 @@ public class UserDtoConverter {
     public UserDto toDto(User user) {
         return new UserDto(
                 user.id(),
-                user.login()
+                user.login(),
+                user.age(),
+                user.role()
         );
     }
 }

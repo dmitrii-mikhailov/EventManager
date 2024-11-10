@@ -1,5 +1,6 @@
 package org.mikhailov.dm.eventmanager.web;
 
+import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,9 +17,9 @@ import java.time.LocalDateTime;
 public class GlobalExceptionHandler {
     private static final Logger log = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
-    @ExceptionHandler(MethodArgumentNotValidException.class)
+    @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<ServerErrorDto> handleValidationException(
-            final MethodArgumentNotValidException e) {
+            final IllegalArgumentException e) {
         log.error("Validation exception", e);
         ServerErrorDto errorDto = new ServerErrorDto(
                 "Некорректный запрос",
