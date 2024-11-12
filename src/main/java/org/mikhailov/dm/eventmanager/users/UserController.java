@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -18,23 +19,32 @@ public class UserController {
     private final UserService userService;
     private final UserDtoConverter userDtoConverter;
     private final JwtAuthenticationService jwtAuthenticationService;
-    private final CreateUserService createUserService;
+    private final PasswordEncoder passwordEncoder;
 
-    public UserController(UserService userService, UserDtoConverter userDtoConverter, JwtAuthenticationService jwtAuthenticationService, CreateUserService createUserService) {
+    public UserController(UserService userService, UserDtoConverter userDtoConverter, JwtAuthenticationService jwtAuthenticationService, PasswordEncoder passwordEncoder) {
         this.userService = userService;
         this.userDtoConverter = userDtoConverter;
         this.jwtAuthenticationService = jwtAuthenticationService;
-        this.createUserService = createUserService;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @PostMapping
     public ResponseEntity<UserDto> createUser(@RequestBody @Valid SignUpRequest signUpRequest) {
         log.info("POST request for create user {}", signUpRequest.login());
-        User newUser = createUserService.createUser(signUpRequest);
+
+        User newUser = new User(
+                null,
+                signUpRequest.login(),
+                passwordEncoder.encode(signUpRequest.password()),
+                signUpRequest.age(),
+                UserRole.USER
+        );
+
+        UserDto userDto = userDtoConverter.toDto(userService.createUser(newUser));
 
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(userDtoConverter.toDto(newUser));
+                .body(userDto);
     }
 
     @GetMapping("/{userId}")
