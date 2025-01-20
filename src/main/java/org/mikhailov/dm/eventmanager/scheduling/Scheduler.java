@@ -1,10 +1,10 @@
-package org.mikhailov.dm.eventmanager.events.utils;
+package org.mikhailov.dm.eventmanager.scheduling;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
 @Configuration
 @EnableScheduling
-public class EventScheduler {
+public class Scheduler {
 
 }

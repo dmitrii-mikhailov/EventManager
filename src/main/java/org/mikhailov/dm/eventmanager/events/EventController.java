@@ -28,7 +28,7 @@ public class EventController {
     @PreAuthorize("hasAuthority('USER')")
     public ResponseEntity<EventDto> createNewEvent(@RequestBody @Valid EventCreateRequestDto eventCreateRequestDto) {
         log.info("Creating new event {}", eventCreateRequestDto);
-        Event newEvent = eventService.createNewEvent(eventCreateRequestDto);
+        Event newEvent = eventService.createNewEvent(eventDtoConverter.fromEventCreateRequestDto(eventCreateRequestDto));
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(eventDtoConverter.toDto(newEvent));
@@ -60,7 +60,7 @@ public class EventController {
             @PathVariable long eventId,
             @RequestBody @Valid EventUpdateRequestDto eventUpdateRequestDto) {
         log.info("Updating event {}", eventId);
-        Event updatedEvent = eventService.updateEvent(eventId, eventUpdateRequestDto);
+        Event updatedEvent = eventService.updateEvent(eventId, eventDtoConverter.fromEventUpdateRequestDto(eventUpdateRequestDto));
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(eventDtoConverter.toDto(updatedEvent));
@@ -70,7 +70,7 @@ public class EventController {
     @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
     public ResponseEntity<List<EventDto>> searchEvents(@RequestBody EventSearchRequestDto requestDto) {
         log.info("Searching events for {}", requestDto);
-        List<Event> events = eventService.searchEvents(requestDto);
+        List<Event> events = eventService.searchEvents(eventDtoConverter.fromEventSearchRequestDto(requestDto));
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(events
@@ -92,36 +92,4 @@ public class EventController {
                         .toList());
     }
 
-    @PostMapping("/registrations/{eventId}")
-    @PreAuthorize("hasAuthority('USER')")
-    public ResponseEntity<Void> registerToEvent(@PathVariable Long eventId) {
-        log.info("Registering to event {}", eventId);
-        eventService.registerToEvent(eventId);
-        return ResponseEntity
-                .status(HttpStatus.NO_CONTENT)
-                .build();
-    }
-
-    @DeleteMapping("/registrations/cancel/{eventId}")
-    @PreAuthorize("hasAuthority('USER')")
-    public ResponseEntity<Void> cancelRegistrationToEvent(@PathVariable Long eventId) {
-        log.info("Cancelling registration for event {}", eventId);
-        eventService.cancelRegistration(eventId);
-        return ResponseEntity
-                .status(HttpStatus.NO_CONTENT)
-                .build();
-    }
-
-    @GetMapping("/registrations/my")
-    @PreAuthorize("hasAuthority('USER')")
-    public ResponseEntity<List<EventDto>> getMyRegistrations() {
-        log.info("Getting current user registrations");
-        List<Event> events = eventService.getEventsUserRegisteredOn();
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(events
-                        .stream()
-                        .map(eventDtoConverter::toDto)
-                        .toList());
-    }
 }
