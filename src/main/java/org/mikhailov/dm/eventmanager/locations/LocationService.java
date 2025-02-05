@@ -63,4 +63,8 @@ public class LocationService {
 
         return locationEntityConverter.toDomain(locationRepository.save(locationEntity));
     }
+
+    public boolean locationExists(Long id) {
+        return locationRepository.existsById(id);
+    }
 }

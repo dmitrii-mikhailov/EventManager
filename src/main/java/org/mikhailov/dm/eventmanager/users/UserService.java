@@ -24,7 +24,7 @@ public class UserService {
        UserEntity userEntity = new UserEntity(
                 null,
                 user.login(),
-                passwordEncoder.encode(user.passwordHash()),
+                user.passwordHash(),
                 user.age(),
                 UserRole.USER.name()
         );
