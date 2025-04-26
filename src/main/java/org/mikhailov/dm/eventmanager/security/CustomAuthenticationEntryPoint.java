@@ -33,7 +33,7 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
             "Необходима аутентификация",
                 authException.getMessage(),
                 LocalDateTime.now()
-        );//доделать
+        );
 
         String json = mapper.writeValueAsString(messageResponse);
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);

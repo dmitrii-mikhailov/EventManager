@@ -24,14 +24,10 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 
     private static final Logger log = LoggerFactory.getLogger(JwtTokenFilter.class);
     private final JwtTokenManager jwtTokenManager;
-    private final UserService userService;
-
 
     public JwtTokenFilter(
-            JwtTokenManager jwtTokenManager,
-            @Lazy UserService userService) { //не понимаю, почему возникает циклическая зависимость без @Lazy, а также как от неё избавиться
+            JwtTokenManager jwtTokenManager) {
         this.jwtTokenManager = jwtTokenManager;
-        this.userService = userService;
     }
 
     @Override
@@ -47,18 +43,19 @@ public class JwtTokenFilter extends OncePerRequestFilter {
         }
         String token = authHeader.substring(7);
         String loginFromToken;
+        String roleFromToken;
         try {
             loginFromToken = jwtTokenManager.getLoginFromToken(token);
+            roleFromToken = jwtTokenManager.getRoleFromToken(token);
         } catch (Exception e) {
             log.error(e.getMessage());
             filterChain.doFilter(request, response);
             return;
         }
-        User user = userService.findByLogin(loginFromToken);
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
-                user,
+                loginFromToken,
                 null,
-                List.of(new SimpleGrantedAuthority(user.role().toString()))
+                List.of(new SimpleGrantedAuthority(roleFromToken))
         );
 
         SecurityContextHolder.getContext().setAuthentication(authenticationToken);

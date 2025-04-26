@@ -15,7 +15,7 @@ public class EventScheduleService {
         this.eventRepository = eventRepository;
     }
 
-    @Scheduled(fixedRate = 1000*10)
+    @Scheduled(fixedRate = 1000*1000)
     public void triggerEventSchedule() {
         log.info("Starting time-appropriate events that are in status {}", EventStatus.WAIT_START);
         eventRepository.startEvents();
