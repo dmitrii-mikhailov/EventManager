@@ -16,7 +16,7 @@ public class EventKafkaEventSender {
     public EventKafkaEventSender(KafkaTemplate<Long, EventChangeKafkaMessage> kafkaTemplate) {
         this.kafkaTemplate = kafkaTemplate;
     }
-    
+
     public void sendEventChange(EventChangeKafkaMessage msg) {
         log.info("Sending event change {}", msg);
         CompletableFuture<SendResult<Long, EventChangeKafkaMessage>> result
