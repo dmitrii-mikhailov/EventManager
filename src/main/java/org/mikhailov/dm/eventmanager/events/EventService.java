@@ -81,8 +81,6 @@ public class EventService {
                 new EventFieldChange<>(EventStatus.WAIT_START.name(), EventStatus.CANCELLED.name()),
                 null
         ));
-        //event.getRegistrationList().stream().map(RegistrationEntity::getId).toList()
-
     }
 
     public Event getEventById(long eventId) {
