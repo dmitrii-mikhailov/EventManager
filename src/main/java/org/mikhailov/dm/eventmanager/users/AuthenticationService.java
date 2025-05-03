@@ -36,6 +36,6 @@ public class AuthenticationService {
         if (authentication == null) {
             throw new IllegalStateException("Authentication is null");
         }
-        return (User) authentication.getPrincipal();
+        return userService.findByLogin(authentication.getPrincipal().toString());
     }
 }
